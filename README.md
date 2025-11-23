@@ -1,5 +1,66 @@
 # UniRig: One Model to Rig Them All
 
+
+---
+
+## 🔧 Fork-Specific Features (This Repository)
+
+This fork ([lp6m/UniRig](https://github.com/lp6m/UniRig)) adds several enhancements to simplify setup and usage:
+
+### Docker & Dev Container Support
+
+We've added complete Docker support for easy environment setup:
+
+- **`docker/Dockerfile`**: Pre-configured Docker image with all dependencies
+  - Based on `nvidia/cuda:12.4.0-devel-ubuntu22.04`
+  - Includes Python 3.11, PyTorch 2.6.0 (CUDA 12.4), and all required packages
+  - Pre-configured with flash-attn, torch_scatter, torch_cluster, and spconv
+
+- **`.devcontainer/devcontainer.json`**: VS Code Dev Container configuration
+  - Simply open the project in VS Code and select "Reopen in Container"
+  - All dependencies are automatically installed
+
+### GLB to FBX Converter
+
+Added `glb_to_fbx.py` - a standalone converter script using bpy (no Blender GUI required):
+
+**Features:**
+- Converts GLB files to FBX format with embedded textures
+- Automatically removes default Blender objects
+- Configures export settings for Unity/game engine compatibility
+
+**Usage:**
+```bash
+python glb_to_fbx.py input.glb output.fbx
+```
+
+**Example:**
+```bash
+# Convert a GLB model to FBX
+python glb_to_fbx.py examples/giraffe.glb results/giraffe.fbx
+```
+
+The script automatically:
+- Cleans the scene
+- Imports the GLB file
+- Removes unwanted objects
+- Embeds textures into the FBX file
+- Exports with Unity-compatible settings (Y-up, -Z forward)
+
+### Enhanced GLB Merge with Texture Preservation
+
+The merge functionality (`src/inference/merge.py`) has been improved to preserve textures when merging GLB files:
+
+**Improvements:**
+- **Import:** GLB files are now imported with `import_pack_images=True` to properly pack textures
+- **Export:** GLB export includes comprehensive texture options:
+  - UV coordinates (`export_texcoords=True`)
+  - Normal maps (`export_normals=True`)
+  - Material export (`export_materials='EXPORT'`)
+  - Better error reporting for debugging
+
+The textures from your original GLB model will now be preserved in the final rigged output.
+
 <div align="center">
 
 [![Project Page](https://img.shields.io/badge/🏠-Project%20Page-blue.svg)](https://zjp-shadow.github.io/works/UniRig/)
