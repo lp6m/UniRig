@@ -79,7 +79,7 @@ def load(filepath: str, return_armature: bool=False):
         elif filepath.endswith(".fbx") or filepath.endswith(".FBX"):
             bpy.ops.import_scene.fbx(filepath=filepath, ignore_leaf_bones=False, use_image_search=False)
         elif filepath.endswith(".glb") or filepath.endswith(".gltf"):
-            bpy.ops.import_scene.gltf(filepath=filepath, import_pack_images=False)
+            bpy.ops.import_scene.gltf(filepath=filepath, import_pack_images=True)
         elif filepath.endswith(".dae"):
             bpy.ops.wm.collada_import(filepath=filepath)
         elif filepath.endswith(".blend"):
@@ -384,7 +384,14 @@ def merge(
         elif output_path.endswith(".fbx") or output_path.endswith(".FBX"):
             bpy.ops.export_scene.fbx(filepath=output_path, add_leaf_bones=True)
         elif output_path.endswith(".glb") or output_path.endswith(".gltf"):
-            bpy.ops.export_scene.gltf(filepath=output_path)
+            # Export with all necessary options to include textures
+            bpy.ops.export_scene.gltf(
+                filepath=output_path,
+                export_format='GLB',
+                export_texcoords=True,
+                export_normals=True,
+                export_materials='EXPORT'
+            )
         elif output_path.endswith(".dae"):
             bpy.ops.wm.collada_export(filepath=output_path)
         elif output_path.endswith(".blend"):
@@ -392,8 +399,11 @@ def merge(
                 data_to.objects = data_from.objects
         else:
             raise ValueError(f"not suported type {output_path}")
-    except:
-        raise ValueError(f"failed to export {output_path}")
+    except Exception as e:
+        print(f"Export error: {e}")
+        import traceback
+        traceback.print_exc()
+        raise ValueError(f"failed to export {output_path}: {e}")
 
 def str2bool(v):
     if isinstance(v, bool):
