@@ -1,0 +1,24 @@
+{
+    "name": "UniRig",
+    "build": {
+        "dockerfile": "../docker/Dockerfile",
+    },
+    "context": "../docker",
+    "runArgs": [
+        "--gpus",
+        "all",
+        "--shm-size=12g"
+    ],
+    "remoteEnv": {
+    },
+    "workspaceFolder": "/workspaces/UniRig",
+    "mounts": [],
+    "remoteUser": "developer",
+    "forwardPorts": [
+        8888
+    ],
+    "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python"
+    ]
+}
